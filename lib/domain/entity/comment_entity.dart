@@ -1,34 +1,37 @@
+import 'package:jay_insta_clone/domain/entity/author_entity.dart';
+
 class CommentEntity {
   final int id;
   final String content;
-  final String status;
-  final String authorName;
+  final String commentStatus;
+  final String? createdAt;
   final int postId;
-  final DateTime createdAt;
+  final AuthorEntity author;
 
   CommentEntity({
     required this.id,
     required this.content,
-    required this.status,
-    required this.authorName,
+    required this.commentStatus,
+    this.createdAt,
     required this.postId,
-    required this.createdAt,
+    required this.author,
   });
+
   CommentEntity copyWith({
     int? id,
     String? content,
-    String? status,
-    String? authorName,
+    String? commentStatus,
+    String? createdAt,
     int? postId,
-    DateTime? createdAt,
+    AuthorEntity? author,
   }) {
     return CommentEntity(
       id: id ?? this.id,
       content: content ?? this.content,
-      status: status ?? this.status,
-      authorName: authorName ?? this.authorName,
-      postId: postId ?? this.postId,
+      commentStatus: commentStatus ?? this.commentStatus,
       createdAt: createdAt ?? this.createdAt,
+      postId: postId ?? this.postId,
+      author: author ?? this.author,
     );
   }
 }

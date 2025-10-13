@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
 import 'package:jay_insta_clone/core%20/constants/string_constants.dart';
 import 'package:jay_insta_clone/presentation/features/home/widgets/flag_dialogue.dart';
@@ -10,7 +10,7 @@ class PostCard extends StatelessWidget {
   final String caption;
   final String description;
   final int commentsCount;
-  final DateTime createdAt;
+  final String createdAt;
   final VoidCallback onTap;
   final VoidCallback onFlag;
 
@@ -89,7 +89,7 @@ class PostCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          DateFormat('dd MMM, hh:mm a').format(createdAt),
+                          createdAt,
                           style: const TextStyle(
                             fontSize: 12,
                             color: ColorConstants.textSecondaryColor,

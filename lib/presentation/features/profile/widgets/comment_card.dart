@@ -7,17 +7,6 @@ class CommentCard extends StatelessWidget {
 
   const CommentCard({super.key, required this.comment});
 
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inSeconds < 60) return "${difference.inSeconds}s ago";
-    if (difference.inMinutes < 60) return "${difference.inMinutes}m ago";
-    if (difference.inHours < 24) return "${difference.inHours}h ago";
-    if (difference.inDays < 7) return "${difference.inDays}d ago";
-    return "${date.day}/${date.month}/${date.year}";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,9 +34,11 @@ class CommentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  comment.authorName,
+                  comment.author.username,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 14),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -60,7 +51,7 @@ class CommentCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  _formatDate(comment.createdAt),
+                  comment.createdAt!,
                   style: TextStyle(
                     fontSize: 12,
                     color: ColorConstants.hintColor,

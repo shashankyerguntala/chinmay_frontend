@@ -26,7 +26,11 @@ class DioClient {
     Map<String, dynamic>? query,
   }) async {
     try {
-      final response = await dio.get(endpoint, queryParameters: query);
+      final response = await dio.get(
+        endpoint,
+        queryParameters: query,
+        options: Options(validateStatus: (status) => true),
+      );
       return Right(response.data);
     } on DioException catch (e) {
       return Left(ErrorHandler.handle(e));
@@ -38,7 +42,11 @@ class DioClient {
     Map<String, dynamic>? data,
   }) async {
     try {
-      final response = await dio.post(endpoint, data: data);
+      final response = await dio.post(
+        endpoint,
+        data: data,
+        options: Options(validateStatus: (status) => true),
+      );
       return Right(response.data);
     } on DioException catch (e) {
       return Left(ErrorHandler.handle(e));
@@ -50,7 +58,11 @@ class DioClient {
     Map<String, dynamic>? data,
   }) async {
     try {
-      final response = await dio.put(endpoint, data: data);
+      final response = await dio.put(
+        endpoint,
+        data: data,
+        options: Options(validateStatus: (status) => true),
+      );
       return Right(response.data);
     } on DioException catch (e) {
       return Left(ErrorHandler.handle(e));
@@ -59,7 +71,10 @@ class DioClient {
 
   Future<Either<Failure, dynamic>> deleteRequest(String endpoint) async {
     try {
-      final response = await dio.delete(endpoint);
+      final response = await dio.delete(
+        endpoint,
+        options: Options(validateStatus: (status) => true),
+      );
       return Right(response.data);
     } on DioException catch (e) {
       return Left(ErrorHandler.handle(e));

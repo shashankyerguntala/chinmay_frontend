@@ -34,7 +34,7 @@ class AppRoutes {
                 user = UserEntity(
                   username: 'shash',
                   email: 'shash@gmail.com',
-                  role: 'user',
+                  role: ['author'],
                   id: 0,
                 );
               }

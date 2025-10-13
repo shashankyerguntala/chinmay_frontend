@@ -16,7 +16,7 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
+    final nameController = TextEditingController();
     final passwordController = TextEditingController();
 
     return BlocProvider(
@@ -68,7 +68,7 @@ class SignInScreen extends StatelessWidget {
                     },
                     child: Container(),
                   ),
-                  BlocBuilder<SignInBloc, SignInState>(
+                   BlocBuilder<SignInBloc, SignInState>(
                     builder: (context, state) {
                       final obscurePassword =
                           state is SignInPasswordVisibilityChanged
@@ -78,7 +78,7 @@ class SignInScreen extends StatelessWidget {
 
                       return SignInForm(
                         formKey: formKey,
-                        emailController: emailController,
+                        emailController: nameController,
                         passwordController: passwordController,
                         obscurePassword: obscurePassword,
                         isLoading: isLoading,
@@ -89,7 +89,7 @@ class SignInScreen extends StatelessWidget {
                           if (formKey.currentState!.validate()) { /////DISABLE KEYBOARD
                             context.read<SignInBloc>().add(
                               SignInRequested(
-                                email: emailController.text.trim(),
+                                name: nameController.text.trim(),
                                 password: passwordController.text.trim(),
                               ),
                             );

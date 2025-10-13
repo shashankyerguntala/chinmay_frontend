@@ -112,7 +112,7 @@ class PostCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    "${post.comments.length} comments",
+                    "${post.comments!.length} comments",
                     style: TextStyle(
                       fontSize: 12,
                       color: ColorConstants.textSecondaryColor,
@@ -224,7 +224,7 @@ class PostCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      "${post.comments.length}",
+                      "${post.comments!.length}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class PostCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              ...post.comments.map((comment) => CommentCard(comment: comment)),
+              ...post.comments!.map((comment) => CommentCard(comment: comment)),
             ],
           ),
         ),

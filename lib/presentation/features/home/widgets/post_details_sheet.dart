@@ -95,10 +95,10 @@ class PostDetailsSheet extends StatelessWidget {
               Expanded(
                 child: ListView.separated(
                   controller: controller,
-                  itemCount: post.comments.length,
+                  itemCount: post.comments!.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
-                    final comment = post.comments[index];
+                    final comment = post.comments![index];
                     return Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -117,7 +117,7 @@ class PostDetailsSheet extends StatelessWidget {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                comment.authorName,
+                                comment.author.username,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: ColorConstants.textPrimaryColor,

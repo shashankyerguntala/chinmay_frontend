@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 import 'package:jay_insta_clone/domain/usecase/moderator_usecase.dart';
 import 'moderator_event.dart';
 import 'moderator_state.dart';
@@ -41,7 +41,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
         final currentState = state as ModeratorLoaded;
         final updatedPosts = currentState.posts
             .map(
-              (p) => p.id == event.postId ? p.copyWith(status: 'approved') : p,
+              (p) => p.id == event.postId ? p.copyWith(postStatus: 'approved') : p,
             )
             .toList();
         emit(currentState.copyWith(posts: updatedPosts));
@@ -60,7 +60,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
         final currentState = state as ModeratorLoaded;
         final updatedPosts = currentState.posts
             .map(
-              (p) => p.id == event.postId ? p.copyWith(status: 'rejected') : p,
+              (p) => p.id == event.postId ? p.copyWith(postStatus: 'rejected') : p,
             )
             .toList();
         emit(currentState.copyWith(posts: updatedPosts));
@@ -80,7 +80,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
         final updatedComments = currentState.comments
             .map(
               (c) =>
-                  c.id == event.commentId ? c.copyWith(status: 'approved') : c,
+                  c.id == event.commentId ? c.copyWith(commentStatus: 'approved') : c,
             )
             .toList();
         emit(currentState.copyWith(comments: updatedComments));
@@ -100,7 +100,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
         final updatedComments = currentState.comments
             .map(
               (c) =>
-                  c.id == event.commentId ? c.copyWith(status: 'rejected') : c,
+                  c.id == event.commentId ? c.copyWith(commentStatus: 'rejected') : c,
             )
             .toList();
         emit(currentState.copyWith(comments: updatedComments));

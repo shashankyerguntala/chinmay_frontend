@@ -24,10 +24,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         password: event.password,
       );
 
-      result.fold(
-        (failure) => emit(SignUpFailure(failure.message)),
-        (msg) => emit(SignUpSuccess(msg)),
-      );
+      result.fold((failure) => emit(SignUpFailure(failure.message)), (data) {
+        if (data.error != null) {
+          emit(SignUpFailure(data.error!));
+        } else {
+          emit(SignUpSuccess(data.response!));
+        }
+      });
     });
   }
 }

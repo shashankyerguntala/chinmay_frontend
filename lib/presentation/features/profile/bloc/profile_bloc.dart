@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 import 'package:jay_insta_clone/domain/usecase/post_usecase.dart';
-
 import 'package:jay_insta_clone/domain/usecase/profile_usecase.dart';
-
 import 'profile_event.dart';
 import 'profile_state.dart';
 
@@ -16,98 +13,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc(this.postUseCase, {required this.profileUsecase})
     : super(ProfileInitial()) {
     on<FetchUserDetailsEvent>(_onFetchUserDetails);
-    on<FetchApprovedPostsEvent>(_onFetchApprovedPosts);
-    on<FetchPendingPostsEvent>(_onFetchPendingPosts);
-    on<FetchDeclinedPostsEvent>(_onFetchDeclinedPosts);
     on<SignOutEvent>(_onSignOut);
     on<BecomeModeratorEvent>(_onBecomeModerator);
-
-    on<DeletePostEvent>(deletePostEvent);
+    on<DeletePostEvent>(_onDeletePost);
   }
 
   Future<void> _onFetchUserDetails(
     FetchUserDetailsEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(ProfileLoading());
+    final result = await profileUsecase.getUserProfile(event.userId);
 
-    final userResult = await profileUsecase.getUserProfile(event.userId);
-    final approvedResult = await profileUsecase.getApprovedPosts(event.userId);
-    final pendingResult = await profileUsecase.getPendingPosts(event.userId);
-    final declinedResult = await profileUsecase.getDeclinedPosts(event.userId);
-
-    userResult.fold((failure) => emit(ProfileError(failure.message)), (user) {
-      approvedResult.fold((failure) => emit(ProfileError(failure.message)), (
-        approvedPosts,
-      ) {
-        pendingResult.fold((failure) => emit(ProfileError(failure.message)), (
-          pendingPosts,
-        ) {
-          declinedResult.fold(
-            (failure) => emit(ProfileError(failure.message)),
-            (declinedPosts) {
-              emit(
-                ProfileLoaded(
-                  user: user,
-                  approvedPosts: approvedPosts,
-                  pendingPosts: pendingPosts,
-                  declinedPosts: declinedPosts,
-                  isModeratorRequest: false,
-                ),
-              );
-            },
-          );
-        });
-      });
+    result.fold((failure) => emit(ProfileError(failure.message)), (
+      profileResponse,
+    ) {
+      emit(
+        ProfileLoaded(
+          approvedPosts: profileResponse.postsByStatus['APPROVED'] ?? [],
+          pendingPosts: profileResponse.postsByStatus['PENDING'] ?? [],
+          declinedPosts: profileResponse.postsByStatus['DENIED'] ?? [],
+          isModeratorRequest: false,
+          username: profileResponse.username,
+          email: profileResponse.email,
+          roles: profileResponse.roles.cast<String>(),
+        ),
+      );
     });
-  }
-
-  Future<void> _onFetchApprovedPosts(
-    FetchApprovedPostsEvent event,
-    Emitter<ProfileState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is ProfileLoaded) {
-      emit(ProfileLoading());
-      final result = await profileUsecase.getApprovedPosts(event.userId);
-      result.fold(
-        (failure) => emit(ProfileError(failure.message)),
-        (approvedPosts) =>
-            emit(currentState.copyWith(approvedPosts: approvedPosts)),
-      );
-    }
-  }
-
-  Future<void> _onFetchPendingPosts(
-    FetchPendingPostsEvent event,
-    Emitter<ProfileState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is ProfileLoaded) {
-      emit(ProfileLoading());
-      final result = await profileUsecase.getPendingPosts(event.userId);
-      result.fold(
-        (failure) => emit(ProfileError(failure.message)),
-        (pendingPosts) =>
-            emit(currentState.copyWith(pendingPosts: pendingPosts)),
-      );
-    }
-  }
-
-  Future<void> _onFetchDeclinedPosts(
-    FetchDeclinedPostsEvent event,
-    Emitter<ProfileState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is ProfileLoaded) {
-      emit(ProfileLoading());
-      final result = await profileUsecase.getDeclinedPosts(event.userId);
-      result.fold(
-        (failure) => emit(ProfileError(failure.message)),
-        (declinedPosts) =>
-            emit(currentState.copyWith(declinedPosts: declinedPosts)),
-      );
-    }
   }
 
   Future<void> _onSignOut(
@@ -122,79 +53,57 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     BecomeModeratorEvent event,
     Emitter<ProfileState> emit,
   ) async {
+
     final currentState = state;
     if (currentState is ProfileLoaded) {
-      emit(currentState.copyWith(isModeratorRequest: true));
-
-      final uid = await AuthLocalStorage.getUid();
-      final result = await profileUsecase.sendModeratorRequest(uid!);
+      final result = await profileUsecase.sendModeratorRequest();
 
       result.fold((failure) => emit(ProfileError(failure.message)), (_) {
         emit(
-          ProfileModeratorSuccess(
-            user: currentState.user,
+          ProfileLoaded(
+            roles: currentState.roles,
+            username: currentState.username,
+            email: currentState.email,
             approvedPosts: currentState.approvedPosts,
             pendingPosts: currentState.pendingPosts,
             declinedPosts: currentState.declinedPosts,
-            isModeratorRequest: true,
           ),
         );
       });
     }
   }
 
-  FutureOr<void> deletePostEvent(
-  DeletePostEvent event,
-  Emitter<ProfileState> emit,
-) async {
-  emit(ProfileLoading());
+  FutureOr<void> _onDeletePost(
+    DeletePostEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(ProfileLoading());
 
-  final uid = await AuthLocalStorage.getUid();
+    final uid = await AuthLocalStorage.getUid();
 
-  final deleteResult = await postUseCase.deletePost(event.postId);
-  await deleteResult.fold(
-    (failure) async {
-      emit(DeleteErrorState());
-    },
-    (_) async {
-      // ✅ Once deletion succeeds, reload the whole profile
-      final userResult = await profileUsecase.getUserProfile(uid!);
-      final approvedResult = await profileUsecase.getApprovedPosts(uid);
-      final pendingResult = await profileUsecase.getPendingPosts(uid);
-      final declinedResult = await profileUsecase.getDeclinedPosts(uid);
+    final deleteResult = await postUseCase.deletePost(event.postId);
 
-      userResult.fold(
-        (failure) => emit(ProfileError(failure.message)),
-        (user) {
-          approvedResult.fold(
-            (failure) => emit(ProfileError(failure.message)),
-            (approvedPosts) {
-              pendingResult.fold(
-                (failure) => emit(ProfileError(failure.message)),
-                (pendingPosts) {
-                  declinedResult.fold(
-                    (failure) => emit(ProfileError(failure.message)),
-                    (declinedPosts) {
-                      emit(
-                        ProfileLoaded(
-                          msg: "Post deleted successfully",
-                          user: user,
-                          approvedPosts: approvedPosts,
-                          pendingPosts: pendingPosts,
-                          declinedPosts: declinedPosts,
-                          isModeratorRequest: false,
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}
+    await deleteResult.fold((failure) async => emit(DeleteErrorState()), (
+      _,
+    ) async {
+      final result = await profileUsecase.getUserProfile(uid!);
+      result.fold((failure) => emit(ProfileError(failure.message)), (
+        profileResponse,
+      ) {
+        emit(
+          ProfileLoaded(
+            msg: "Post deleted successfully",
 
+            approvedPosts: profileResponse.postsByStatus['APPROVED'] ?? [],
+            pendingPosts: profileResponse.postsByStatus['PENDING'] ?? [],
+            declinedPosts: profileResponse.postsByStatus['DENIED'] ?? [],
+            isModeratorRequest: false,
+            username: profileResponse.username,
+            email: profileResponse.email,
+            roles: profileResponse.roles.cast<String>(),
+          ),
+        );
+      });
+    });
+  }
 }

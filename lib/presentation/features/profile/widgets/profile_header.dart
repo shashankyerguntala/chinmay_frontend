@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
 import 'package:jay_insta_clone/core%20/helper_functions.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
+import 'package:jay_insta_clone/presentation/features/profile/widgets/moderator_request_dialogue.dart';
 
 import 'package:jay_insta_clone/presentation/features/profile/widgets/sign_out_dialogue.dart';
 
 import 'role_badge.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final UserEntity user;
+  final String username;
+  final String email;
+  final List<String> roles;
   final bool hasRequestedModerator;
   final VoidCallback onModeratorRequest;
   final VoidCallback onSignOut;
 
   const ProfileHeader({
     super.key,
-    required this.user,
+
     required this.hasRequestedModerator,
     required this.onModeratorRequest,
     required this.onSignOut,
+    required this.username,
+    required this.email,
+    required this.roles,
   });
 
   @override
@@ -41,10 +46,10 @@ class ProfileHeader extends StatelessWidget {
       ),
       child: Column(
         children: [
-          RoleBadge(userRole: user.role),
+          RoleBadge(userRole: roles.last),
           const SizedBox(height: 16),
           Text(
-            user.username,
+            username,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -54,20 +59,19 @@ class ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            user.email,
+            email,
             style: TextStyle(
               fontSize: 14,
               color: ColorConstants.textSecondaryColor,
             ),
           ),
           const SizedBox(height: 12),
-          RoleBadge(userRole: user.role, isTextBadge: true),
+          RoleBadge(userRole: roles.last, isTextBadge: true),
           const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
-                child:
-                    user.hasRequestedModerator! 
+                child: hasRequestedModerator
                     ? Container(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
@@ -101,7 +105,7 @@ class ProfileHeader extends StatelessWidget {
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: HelperFunctions.getRoleColor(
-                            user.role,
+                            roles.last,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -111,9 +115,14 @@ class ProfileHeader extends StatelessWidget {
                             vertical: 12,
                           ),
                         ),
-                        onPressed: onModeratorRequest,
+                        onPressed: () {
+                          ModeratorRequestDialog.show(
+                            context,
+                            onModeratorRequest,
+                          );
+                        },
                         child: Text(
-                          HelperFunctions.getRoleLabel(user.role),
+                          HelperFunctions.getRoleLabel(roles.last),
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 15,

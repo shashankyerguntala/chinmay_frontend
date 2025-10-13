@@ -1,13 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 
 class AppInterceptor extends Interceptor {
   String? token;
-
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("jwt_token");
-  }
 
   @override
   void onRequest(
@@ -15,7 +10,7 @@ class AppInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     if (!options.path.contains("login") && !options.path.contains("register")) {
-      token ??= await getToken();
+      token ??= await AuthLocalStorage.getToken();
       if (token != null) {
         options.headers["Authorization"] = "Bearer $token";
       }

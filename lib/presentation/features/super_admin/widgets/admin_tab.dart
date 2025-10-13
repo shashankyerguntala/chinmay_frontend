@@ -50,7 +50,7 @@ class AdminTab extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton.icon(
-                      onPressed: post.status == 'pending'
+                      onPressed: post.postStatus == 'pending'
                           ? () => context.read<SuperAdminBloc>().add(
                               RejectPostSuperAdmin(post.id),
                             )
@@ -61,7 +61,7 @@ class AdminTab extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
-                      onPressed: post.status == 'pending'
+                      onPressed: post.postStatus == 'pending'
                           ? () => context.read<SuperAdminBloc>().add(
                               ApprovePostSuperAdmin(post.id),
                             )

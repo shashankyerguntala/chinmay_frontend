@@ -1,12 +1,13 @@
 class ApiConstants {
-  static const String baseUrl = "https://unscrupulously-gamogenetic-rodolfo.ngrok-free.dev";
-  //!JAY
+  static const String baseUrl = "https://gifted-hisako-nearly.ngrok-free.dev";
+  //!CHINMAY
 
-  //! Auth
-  static const String register = "/api/auth/register";
+  //! AUTH
+  static const String register = "/api/users/signup";
   static const String login = "/api/auth/login";
 
-  //! Users
+  //! HOME
+  static const String getAllPosts = "/api/posts/feed";
 
   static String userPosts(String id) => "/api/users/$id/posts";
   static String userApprovedPosts(int id) =>
@@ -15,28 +16,30 @@ class ApiConstants {
       '/api/posts/user/$id/status/disapproved';
   static String userPendingPosts(int id) =>
       '/api/posts/user/$id/status/pending';
-  static String userProfile(int id) => '/api/users/$id';
-  static String becomeModerator(int id) =>
-      '/api/moderator-requests/request/$id';
+  static String userProfile = '/api/users/profile'; //
+  static String becomeModerator = '/api/users/moderator-request';//
 
   //! Posts
-  static const String createPost = "/api/posts";
-  static const String getAllPosts = "/api/posts/approved";
-  static String updatePost(int id) => "/api/posts/$id";/////////////////
+  static const String createPost = "/api/posts"; //
+
+  static String updatePost(int id) => "/api/posts/$id"; /////////////////
   static String deletePost(int id) => "/api/posts/$id";
 
   //! Comments
-  static String sendComment() => "/api/comments";/////////////
+  static String sendComment(int postId) => "/api/posts/$postId/comment"; //
 
   //! Moderator
-static String getModeratorPendingComments ="/api/moderation/comments/status/pending";
+  static String getModeratorPendingComments =
+      "/api/moderation/comments/status/pending";
   static String getModeratorPendingPosts =
       '/api/moderation/posts/status/pending';
-  static String approvePost(int postId) => '/api/moderation/posts/$postId';//////////
+  static String approvePost(int postId) =>
+      '/api/moderation/posts/$postId'; //////////
   static String rejectPost(int postId) => '/api/moderation/posts/$postId';
   static String approveComment(int postId) =>
       '/api/moderation/comments/$postId';
-  static String rejectComment(int postId) => '/api/moderation/comments/$postId';////////////
+  static String rejectComment(int postId) =>
+      '/api/moderation/comments/$postId'; ////////////
 
   //! Admin
   static String approveModerator(int reqId) =>

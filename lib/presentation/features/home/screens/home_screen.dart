@@ -95,11 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final post = posts[index];
                     return PostCard(
-                      email: post.authorName,
+                      email: post.author.username,
                       caption: post.title,
                       description: post.content,
-                      commentsCount: post.comments.length,
-                      createdAt: post.createdAt,
+                      commentsCount: post.comments!.length,
+                      createdAt: post.createdAt!,
                       onTap: () => showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      role: widget.user.role,
+                      role: widget.user.role.last,
                       onFlag: () {
                         context.read<HomeBloc>().add(
                           FlagPostEvent(postId: post.id),

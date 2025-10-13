@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 
 abstract class ProfileState extends Equatable {
   const ProfileState();
@@ -16,7 +15,9 @@ class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final String? msg;
-  final UserEntity user;
+  final String username;
+  final String email;
+  final List<String> roles;
   final List<PostEntity> approvedPosts;
   final List<PostEntity> pendingPosts;
   final List<PostEntity> declinedPosts;
@@ -24,7 +25,9 @@ class ProfileLoaded extends ProfileState {
 
   const ProfileLoaded({
     this.msg,
-    required this.user,
+    required this.roles,
+    required this.username,
+    required this.email,
     required this.approvedPosts,
     required this.pendingPosts,
     required this.declinedPosts,
@@ -35,7 +38,9 @@ class ProfileLoaded extends ProfileState {
 extension ProfileLoadedCopy on ProfileLoaded {
   ProfileLoaded copyWith({
     String? msg,
-    UserEntity? user,
+    String? username,
+    String? email,
+    List<String>? roles,
     List<PostEntity>? approvedPosts,
     List<PostEntity>? pendingPosts,
     List<PostEntity>? declinedPosts,
@@ -43,11 +48,13 @@ extension ProfileLoadedCopy on ProfileLoaded {
   }) {
     return ProfileLoaded(
       msg: msg,
-      user: user ?? this.user,
+      username: username!,
+      email: email!,
       approvedPosts: approvedPosts ?? this.approvedPosts,
       pendingPosts: pendingPosts ?? this.pendingPosts,
       declinedPosts: declinedPosts ?? this.declinedPosts,
       isModeratorRequest: isModeratorRequest ?? this.isModeratorRequest,
+      roles: roles!,
     );
   }
 }
@@ -65,11 +72,13 @@ class ProfileSignedOut extends ProfileState {}
 
 class ProfileModeratorSuccess extends ProfileLoaded {
   const ProfileModeratorSuccess({
-    required super.user,
     required super.approvedPosts,
     required super.pendingPosts,
     required super.declinedPosts,
     required super.isModeratorRequest,
+    required super.username,
+    required super.email,
+    required super.roles,
   });
 }
 

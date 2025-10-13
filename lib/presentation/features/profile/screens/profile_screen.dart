@@ -5,7 +5,7 @@ import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
 import 'package:jay_insta_clone/core%20/constants/string_constants.dart';
 import 'package:jay_insta_clone/core%20/di/di.dart';
 import 'package:jay_insta_clone/core%20/helper_functions.dart';
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 
 import 'package:jay_insta_clone/presentation/features/profile/bloc/profile_bloc.dart';
 import 'package:jay_insta_clone/presentation/features/profile/bloc/profile_event.dart';
@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (state is ProfileLoaded ||
                   state is ProfileModeratorSuccess) {
                 final loadedState = state as ProfileLoaded;
-                final user = loadedState.user;
+
                 final isModerator = loadedState.isModeratorRequest;
 
                 return DefaultTabController(
@@ -97,24 +97,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       ProfileHeader(
-                        user: user,
                         hasRequestedModerator: isModerator,
                         onModeratorRequest: () {
-                          if (user.role == "AUTHOR") {
+                          if (state.roles.last == "AUTHOR") {
                             context.read<ProfileBloc>().add(
                               BecomeModeratorEvent(),
                             );
-                          } else if (user.role == "MODERATOR") {
+                          } else if (state.roles.last == "MODERATOR") {
                             context.push('/moderator');
-                          } else if (user.role == "ADMIN") {
+                          } else if (state.roles.last == "ADMIN") {
                             context.push('/admin');
-                          } else if (user.role == "SUPER_ADMIN") {
+                          } else if (state.roles.last == "SUPER_ADMIN") {
                             context.push('/superadmin');
                           }
                         },
                         onSignOut: () {
                           context.read<ProfileBloc>().add(SignOutEvent());
                         },
+                        username: state.username,
+                        email: state.email,
+                        roles: state.roles,
                       ),
                       const SizedBox(height: 8),
                       Container(
@@ -135,7 +137,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           unselectedLabelColor:
                               ColorConstants.textSecondaryColor,
                           indicator: BoxDecoration(
-                            color: HelperFunctions.getRoleColor(user.role),
+                            color: HelperFunctions.getRoleColor(
+                              state.roles.last,
+                            ),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
                           indicatorSize: TabBarIndicatorSize.tab,

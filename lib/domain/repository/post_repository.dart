@@ -5,11 +5,7 @@ import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 abstract class PostRepository {
   Future<Either<Failure, List<PostEntity>>> getAllPosts();
 
-  Future<Either<Failure, String>> createPost(
-    int uid,
-    String title,
-    String content,
-  );
+  Future<Either<Failure, String>> createPost(String title, String content);
   Future<Either<Failure, List<PostEntity>>> getUserPosts(
     String userId,
   ); //! ithe bgh string / int

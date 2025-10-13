@@ -4,7 +4,8 @@ import 'package:jay_insta_clone/core%20/constants/string_constants.dart';
 import 'package:jay_insta_clone/presentation/features/authentication/sign_in/widgets/custom_text_field_signin.dart';
 import 'package:jay_insta_clone/presentation/features/authentication/sign_up/screens/sign_up_screen.dart';
 
-class SignInForm extends StatelessWidget { ///////// TRY TO MAKE 1
+class SignInForm extends StatelessWidget {
+  ///////// TRY TO MAKE 1
   final GlobalKey<FormState> formKey;
 
   final TextEditingController emailController;
@@ -39,10 +40,10 @@ class SignInForm extends StatelessWidget { ///////// TRY TO MAKE 1
           children: [
             CustomTextFieldSignin(
               controller: emailController,
-              label: StringConstants.emailLabel,
+              label: StringConstants.usernameLabel,
               validatorMsg: StringConstants.emailEmpty,
               keyboardType: TextInputType.emailAddress,
-              emailValidator: true,
+              emailValidator: false,
             ),
             const SizedBox(height: 16),
 
@@ -87,7 +88,8 @@ class SignInForm extends StatelessWidget { ///////// TRY TO MAKE 1
               ],
             ),
             const SizedBox(height: 16),
-            SizedBox(/////////////
+            SizedBox(
+              /////////////
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: isLoading ? null : onSubmit,

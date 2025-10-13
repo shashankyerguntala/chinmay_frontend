@@ -60,13 +60,13 @@ class PostCardModerator extends StatelessWidget {
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: HelperFunctions.getRoleColor(post.status).withAlpha(20),
+          color: HelperFunctions.getRoleColor(post.postStatus).withAlpha(20),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
-          post.status.toUpperCase(),
+          post.postStatus.toUpperCase(),
           style: ThemeConstants.bodySmall.copyWith(
-            color: HelperFunctions.getRoleColor(post.status),
+            color: HelperFunctions.getRoleColor(post.postStatus),
             fontWeight: FontWeight.w500,
             fontSize: 11,
           ),

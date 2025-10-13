@@ -2,33 +2,64 @@ import 'package:dartz/dartz.dart';
 import 'package:jay_insta_clone/core%20/constants/api_constants.dart';
 import 'package:jay_insta_clone/core%20/network/dio_client.dart';
 import 'package:jay_insta_clone/core%20/network/failure.dart';
+import 'package:jay_insta_clone/data%20/models/api_response_model.dart';
 import 'package:jay_insta_clone/data%20/models/post_model.dart';
+import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 
 class PostDataSource {
   final DioClient dioClient;
 
   PostDataSource(this.dioClient);
 
-  Future<Either<Failure, List<PostModel>>> getAllPosts() async {
-    final response = await dioClient.getRequest(ApiConstants.getAllPosts);
-    return response.fold((failure) => Left(failure), (data) {
-      final list = (data as List)
-          .map((json) => PostModel.fromJson(json))
-          .toList();
-      return Right(list);
+  Future<Either<Failure, List<PostEntity>>> getAllPosts() async {
+    final result = await dioClient.getRequest(ApiConstants.getAllPosts);
+
+    return result.fold((failure) => Left(failure), (data) {
+      try {
+        final apiResponse = ApiResponseModel<List<PostModel>>.fromJson(
+          data,
+          (jsonList) => (jsonList as List<dynamic>)
+              .map((e) => PostModel.fromJson(e as Map<String, dynamic>))
+              .toList()
+              .cast<PostModel>(),
+        );
+
+        if (apiResponse.success && apiResponse.data != null) {
+          final postEntities = apiResponse.data!
+              .map((postModel) => postModel as PostEntity)
+              .toList();
+          return Right(postEntities);
+        } else {
+          return Left(Failure(apiResponse.message));
+        }
+      } catch (e) {
+        return Left(Failure("Failed to parse posts: $e"));
+      }
     });
   }
 
+  //! create post
   Future<Either<Failure, String>> createPost(
-    int uid,
     String title,
     String content,
   ) async {
     final response = await dioClient.postRequest(
       ApiConstants.createPost,
-      data: {"userId": uid, "title": title, "content": content},
+      data: {"title": title, "content": content},
     );
-    return response.fold((failure) => Left(failure), (data) => Right(data));
+    return response.fold((failure) => Left(failure), (data) {
+      try {
+        final apiResponse = ApiResponseModel.fromJson(data, (value) => true);
+
+        if (apiResponse.success) {
+          return Right("Post sent for approval");
+        } else {
+          return Left(Failure(apiResponse.message));
+        }
+      } catch (e) {
+        return Left(Failure("Failed to create Post !"));
+      }
+    });
   }
 
   Future<Either<Failure, List<PostModel>>> getUserPosts(String userId) async {

@@ -9,10 +9,9 @@ class SendCommentUseCase {
   SendCommentUseCase(this.repository);
 
   Future<Either<Failure, String>> sendComment(
-    int userId,
     int postId,
     String content,
   ) async {
-    return await repository.sendComment(userId, postId, content);
+    return await repository.sendComment(postId, content);
   }
 }

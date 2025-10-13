@@ -2,23 +2,18 @@ import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 
 class UserModel extends UserEntity {
   UserModel({
+    required super.id,
     required super.username,
     required super.email,
     required super.role,
-    required super.id,
-    super.hasRequestedModerator,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json["id"] ?? "",
-      username: json["username"] ?? "",
-      email: json["email"] ?? "",
-      role: json["role"] ?? "",
-      hasRequestedModerator: json["hasRequestedModerator"],
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
+      role: List<String>.from(json['roles'] ?? []),
     );
-  }
-  UserEntity toEntity() {
-    return UserEntity(username: username, email: email, role: role, id: id);
   }
 }

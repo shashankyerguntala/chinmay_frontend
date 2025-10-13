@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 import 'package:jay_insta_clone/domain/usecase/post_usecase.dart';
 import 'package:jay_insta_clone/domain/usecase/send_comment_usecase.dart';
 import 'home_event.dart';
@@ -22,14 +21,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     emit(HomeLoading());
-    Future.delayed(Duration(seconds: 2));
 
-    final result = await postUseCase.getAllPosts();
+    try {
+      await Future.delayed(const Duration(seconds: 1));
 
-    result.fold(
-      (failure) => emit(HomeError(failure.message)),
-      (posts) => emit(HomeLoaded(posts)),
-    );
+      final result = await postUseCase.getAllPosts();
+
+      result.fold(
+        (failure) {
+          emit(HomeError(failure.message));
+        },
+        (posts) {
+          emit(HomeLoaded(posts));
+        },
+      );
+    } catch (e) {
+      emit(HomeError("Unexpected error occurred: $e"));
+    }
   }
 
   FutureOr<void> flagPostEvent(

@@ -1,45 +1,34 @@
+import 'package:jay_insta_clone/data%20/models/comment_model.dart';
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
-import 'comment_model.dart';
+import 'package:jay_insta_clone/data%20/models/author_model.dart';
 
 class PostModel extends PostEntity {
   PostModel({
     required super.id,
     required super.title,
     required super.content,
-    required super.status,
-    required super.authorName,
-    required super.createdAt,
+    required super.postStatus,
+    super.createdAt,
+    required super.author,
     required super.comments,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+
+    final authorJson = json['author'] as Map<String, dynamic>?;
     return PostModel(
-      id: json['id'] as int,
-      title: json['title'] ?? "",
-      content: json['content'] ?? "",
-      status: json['status'] ?? "",
-      authorName: json['authorName'] ?? "",
-      createdAt: DateTime.parse(
-        json['createdAt'] ?? DateTime.now().toIso8601String(),
-      ),
-      comments: (json['approvedComments'] as List<dynamic>? ?? [])
-          .map((commentJson) => CommentModel.fromJson(commentJson))
-          .toList(),
+      id: json['id'] ?? 0,
+      title: json['title']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      postStatus: json['postStatus']?.toString() ?? '',
+      createdAt: json['createdAt']?.toString() ?? '',
+      author: authorJson != null
+          ? AuthorModel.fromJson(authorJson)
+          : AuthorModel(id: 0, username: ''),
+      comments: (json['comments'] as List<dynamic>?)
+              ?.map((c) => CommentModel.fromJson(c as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'content': content,
-      'status': status,
-      'authorName': authorName,
-      'createdAt': createdAt.toIso8601String(),
-      'approvedComments': comments
-          .map((comment) => (comment as CommentModel).toJson())
-          .toList(),
-    };
-  }
 }
-

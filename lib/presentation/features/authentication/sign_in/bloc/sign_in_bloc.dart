@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+
 import 'package:jay_insta_clone/domain/usecase/auth_usecase.dart';
 
 part 'sign_in_event.dart';
@@ -20,24 +20,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequested>((event, emit) async {
       emit(SignInLoading());
       final result = await authUsecase.login(
-        email: event.email,
+        name: event.name,
         password: event.password,
       );
 
-       result.fold(
-        (failure)  {
-          emit(SignInFailure(failure.message));
-        },
-        (user) async {
-          await AuthLocalStorage.saveUid(user.id);
-          await AuthLocalStorage.saveRole(user.role);
-
-          final uid = user.id;
-          final role = await AuthLocalStorage.getRole();/////////////////////CHECK
-
-          emit(SignInSuccess(uid, role!, user.username));
-        },
-      );
+      result.fold((failure) => emit(SignInFailure(failure.message)), (user) {
+        emit(SignInSuccess(user.id, user.role.last, user.username));
+      });
     });
   }
 }

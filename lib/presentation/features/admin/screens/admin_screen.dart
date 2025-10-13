@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
 import 'package:jay_insta_clone/core%20/constants/theme_constants.dart';
 import 'package:jay_insta_clone/core%20/di/di.dart';
-import 'package:jay_insta_clone/core%20/shared_prefs/auth_local_storage.dart';
+import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 import 'package:jay_insta_clone/presentation/features/admin/widgets/moderator_request_tab.dart';
 
 import '../bloc/admin_bloc.dart';

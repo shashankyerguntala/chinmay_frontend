@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:jay_insta_clone/core%20/network/dio_client.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/admin_data_source.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/auth_data_source.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/comment_data_source.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/moderator_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/admin_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/auth_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/comment_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/moderator_data_source.dart';
 
-import 'package:jay_insta_clone/data%20/remote_data_sources/post_data_source.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/profile_data_source.dart';
-import 'package:jay_insta_clone/data%20/remote_data_sources/super_admin_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/post_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/profile_data_source.dart';
+import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/super_admin_data_source.dart';
 import 'package:jay_insta_clone/data%20/repository_impl/admin_repo_impl.dart';
 import 'package:jay_insta_clone/data%20/repository_impl/auth_repo_impl.dart';
 import 'package:jay_insta_clone/data%20/repository_impl/comment_repo_impl.dart';
@@ -40,7 +40,8 @@ import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_adm
 GetIt di = GetIt.instance;
 
 class Di {
-  static Future<void> init() async {////////////ADD TAGS
+  static Future<void> init() async {
+    ////////////ADD TAGS
     di.registerLazySingleton(() => DioClient());
     di.registerLazySingleton(() => AuthRemoteDataSource(dioClient: di()));
     di.registerLazySingleton<AuthRepository>(
@@ -62,7 +63,7 @@ class Di {
 
     di.registerLazySingleton(() => ProfileDataSource(dioClient: di()));
     di.registerLazySingleton<ProfileRepository>(
-      () => ProfileRepositoryImpl(profileDataSource: di()),
+      () => ProfileRepositoryImpl(dataSource: di()),
     );
     di.registerLazySingleton(() => ProfileUsecase(di()));
     di.registerLazySingleton(() => ProfileBloc(profileUsecase: di(), di()));
