@@ -74,9 +74,8 @@ class ModeratorDataSource {
 
   //! approve post
   Future<Either<Failure, String>> approvePost(int postId) async {
-    final response = await dioClient.putRequest(
+    final response = await dioClient.postRequest(
       ApiConstants.approvePost(postId),
-      data: {"reason": "Post meets guidelines"},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -96,9 +95,8 @@ class ModeratorDataSource {
 
   //! reject post
   Future<Either<Failure, String>> rejectPost(int postId) async {
-    final response = await dioClient.putRequest(
+    final response = await dioClient.postRequest(
       ApiConstants.rejectPost(postId),
-      data: {"reason": "Violates community guidelines"},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -117,16 +115,13 @@ class ModeratorDataSource {
   }
 
   //! comment approve
-  Future<Either<Failure, String>> approveComment(
-    int commentId,
-
-  ) async {
-    final response = await dioClient.putRequest(
+  Future<Either<Failure, String>> approveComment(int commentId) async {
+    final response = await dioClient.postRequest(
       ApiConstants.approveComment(commentId),
       data: {"reason": "Comment is appropriate"},
     );
 
- return response.fold((failure) => Left(failure), (data) {
+    return response.fold((failure) => Left(failure), (data) {
       final apiResponse = ApiResponseModel<String>.fromJson(
         data,
         (json) => json?.toString() ?? '',
@@ -142,12 +137,12 @@ class ModeratorDataSource {
   }
 
   Future<Either<Failure, String>> rejectComment(int commentId) async {
-    final response = await dioClient.putRequest(
+    final response = await dioClient.postRequest(
       ApiConstants.rejectComment(commentId),
       data: {"reason": "Comment is appropriate"},
     );
 
- return response.fold((failure) => Left(failure), (data) {
+    return response.fold((failure) => Left(failure), (data) {
       final apiResponse = ApiResponseModel<String>.fromJson(
         data,
         (json) => json?.toString() ?? '',

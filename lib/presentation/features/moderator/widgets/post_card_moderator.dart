@@ -66,7 +66,7 @@ class PostCardModerator extends StatelessWidget {
         child: Text(
           post.postStatus.toUpperCase(),
           style: ThemeConstants.bodySmall.copyWith(
-            color: HelperFunctions.getRoleColor(post.postStatus),
+            color: ColorConstants.errorColor,
             fontWeight: FontWeight.w500,
             fontSize: 11,
           ),

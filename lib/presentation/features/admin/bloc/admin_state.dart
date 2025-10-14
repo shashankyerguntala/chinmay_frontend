@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 import 'package:jay_insta_clone/domain/entity/comment_entity.dart';
-import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 
 abstract class AdminState extends Equatable {

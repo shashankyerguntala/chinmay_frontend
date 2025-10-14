@@ -36,7 +36,7 @@ class RoleBadge extends StatelessWidget {
       default:
         roleColor = ColorConstants.primaryColor;
         roleIcon = Icons.person;
-        roleText = "USER";
+        roleText = "AUTHOR";
     }
 
     return isTextBadge

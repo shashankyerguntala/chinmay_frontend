@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      role: widget.user.role.last,
+                      role: widget.user.role,
                       onFlag: () {
                         context.read<HomeBloc>().add(
                           FlagPostEvent(postId: post.id),

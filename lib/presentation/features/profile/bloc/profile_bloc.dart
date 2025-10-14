@@ -37,7 +37,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           isModeratorRequest: profileResponse.hasRequestedModerator,
           username: profileResponse.username,
           email: profileResponse.email,
-          roles: profileResponse.roles.cast<String>(),
+          roles: profileResponse.roles,
         ),
       );
     });
@@ -104,7 +104,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             isModeratorRequest: false,
             username: profileResponse.username,
             email: profileResponse.email,
-            roles: profileResponse.roles.cast<String>(),
+            roles: profileResponse.roles,
           ),
         );
       });

@@ -2,15 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
 
 class AppInterceptor extends Interceptor {
-  String? token;
-
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
     if (!options.path.contains("login") && !options.path.contains("register")) {
-      token ??= await AuthLocalStorage.getToken();
+      final token = await AuthLocalStorage.getToken();
       if (token != null) {
         options.headers["Authorization"] = "Bearer $token";
       }

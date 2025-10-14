@@ -13,11 +13,11 @@ class ModeratorUseCase {
     return repository.getPendingPosts();
   }
 
-  Future<Either<Failure, String>> approvePost(int postId, int userId) async {
+  Future<Either<Failure, String>> approvePost(int postId) async {
     return repository.approvePost(postId);
   }
 
-  Future<Either<Failure, String>> rejectPost(int postId, int userId) async {
+  Future<Either<Failure, String>> rejectPost(int postId) async {
     return repository.rejectPost(postId);
   }
 
@@ -27,7 +27,7 @@ class ModeratorUseCase {
 
   Future<Either<Failure, String>> approveComment(
     int commentId,
-    int userId,
+
   ) async {
     return repository.approveComment(commentId);
   }

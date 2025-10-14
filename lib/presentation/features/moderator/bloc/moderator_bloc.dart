@@ -34,8 +34,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
     ApprovePost event,
     Emitter<ModeratorState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await useCase.approvePost(event.postId, userId!);
+    final result = await useCase.approvePost(event.postId);
     result.fold(
       (failure) => emit(ModeratorError(failure.message)),
       (_) => add(FetchAll()),
@@ -46,8 +45,7 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
     RejectPost event,
     Emitter<ModeratorState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await useCase.rejectPost(event.postId, userId!);
+    final result = await useCase.rejectPost(event.postId);
     result.fold(
       (failure) => emit(ModeratorError(failure.message)),
       (_) => add(FetchAll()),
@@ -58,8 +56,8 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
     ApproveComment event,
     Emitter<ModeratorState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await useCase.approveComment(event.commentId, userId!);
+
+    final result = await useCase.approveComment(event.commentId);
     result.fold(
       (failure) => emit(ModeratorError(failure.message)),
       (_) => add(FetchAll()),

@@ -55,8 +55,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     ApprovePostAdmin event,
     Emitter<AdminState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await moderatorUseCase.approvePost(event.postId, userId!);
+    final result = await moderatorUseCase.approvePost(event.postId);
 
     result.fold(
       (failure) => emit(AdminError(failure.message)),
@@ -68,8 +67,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     RejectPostAdmin event,
     Emitter<AdminState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await moderatorUseCase.rejectPost(event.postId, userId!);
+    final result = await moderatorUseCase.rejectPost(event.postId);
 
     result.fold(
       (failure) => emit(AdminError(failure.message)),
@@ -81,11 +79,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     ApproveCommentAdmin event,
     Emitter<AdminState> emit,
   ) async {
-    final userId = await AuthLocalStorage.getUid();
-    final result = await moderatorUseCase.approveComment(
-      event.commentId,
-      userId!,
-    );
+    final result = await moderatorUseCase.approveComment(event.commentId);
 
     result.fold(
       (failure) => emit(AdminError(failure.message)),

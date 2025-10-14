@@ -25,7 +25,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       );
 
       result.fold((failure) => emit(SignInFailure(failure.message)), (user) {
-        emit(SignInSuccess(user.id, user.role.last, user.username));
+        emit(SignInSuccess(user.id, user.role, user.username));
       });
     });
   }

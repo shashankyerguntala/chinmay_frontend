@@ -97,15 +97,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         //Todo Ithe bgh roles switching sathi
                         hasRequestedModerator: state.isModeratorRequest,
                         onModeratorRequest: () {
-                          if (state.roles.last == "AUTHOR") {
+                          if (state.roles == "AUTHOR") {
                             context.read<ProfileBloc>().add(
                               BecomeModeratorEvent(),
                             );
-                          } else if (state.roles.last == "MODERATOR") {
+                          } else if (state.roles == "MODERATOR") {
                             context.push('/moderator');
-                          } else if (state.roles.last == "ADMIN") {
+                          } else if (state.roles == "ADMIN") {
                             context.push('/admin');
-                          } else if (state.roles.last == "SUPER_ADMIN") {
+                          } else if (state.roles == "SUPER_ADMIN") {
                             context.push('/superadmin');
                           }
                         },
@@ -135,9 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           unselectedLabelColor:
                               ColorConstants.textSecondaryColor,
                           indicator: BoxDecoration(
-                            color: HelperFunctions.getRoleColor(
-                              state.roles.last,
-                            ),
+                            color: HelperFunctions.getRoleColor(state.roles),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
                           indicatorSize: TabBarIndicatorSize.tab,

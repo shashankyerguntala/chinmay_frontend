@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
 import 'package:jay_insta_clone/core%20/constants/theme_constants.dart';
 import 'package:jay_insta_clone/core%20/di/di.dart';
-import 'package:jay_insta_clone/core%20/helper_functions.dart';
+
 import 'package:jay_insta_clone/presentation/features/moderator/bloc/moderator_bloc.dart';
 import 'package:jay_insta_clone/presentation/features/moderator/bloc/moderator_event.dart';
 import 'package:jay_insta_clone/presentation/features/moderator/bloc/moderator_state.dart';
+import 'package:jay_insta_clone/presentation/features/moderator/widgets/error_dialogue_box.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/widgets/empty_state.dart';
 
 class ModeratorScreen extends StatelessWidget {
   const ModeratorScreen({super.key});
@@ -28,6 +30,16 @@ class ModeratorScreen extends StatelessWidget {
                 ),
               ),
             );
+          } else if (state is ModeratorError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ErrorDialogueBox.show(
+                context,
+                "Error",
+                "You can't review your own content",
+              );
+
+              context.read<ModeratorBloc>().add(FetchAll());
+            });
           } else if (state is CommentActionSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -44,34 +56,6 @@ class ModeratorScreen extends StatelessWidget {
           if (state is ModeratorLoading) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
-            );
-          } else if (state is ModeratorError) {
-            return Scaffold(
-              appBar: AppBar(
-                leading: GestureDetector(
-                  onTap: () {
-                    context.go('/moderator');
-                  },
-                  child: Icon(Icons.arrow_back),
-                ),
-              ),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 48,
-                      color: ColorConstants.textSecondaryColor,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "You can't review your own post/comment !",
-                      style: ThemeConstants.bodyMedium,
-                    ),
-                  ],
-                ),
-              ),
             );
           } else if (state is ModeratorLoaded) {
             final posts = state.posts;
@@ -134,6 +118,48 @@ class ModeratorScreen extends StatelessWidget {
                 ),
               ),
             );
+          } else if (state is ModeratorError) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: GestureDetector(
+                  onTap: () {
+                    context.go('/profile');
+                  },
+                  child: Icon(Icons.arrow_back),
+                ),
+                centerTitle: true,
+                title: Text('Moderator', style: ThemeConstants.headingMedium),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: ColorConstants.errorColor,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Something went wrong',
+                      style: ThemeConstants.bodyLarge,
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<ModeratorBloc>().add(FetchAll());
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Retry'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorConstants.primaryColor,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           return const SizedBox();
@@ -144,10 +170,7 @@ class ModeratorScreen extends StatelessWidget {
 
   Widget _buildPostsList(BuildContext context, List<dynamic> posts) {
     if (posts.isEmpty) {
-      return _buildEmptyState(
-        icon: Icons.post_add,
-        message: "No pending posts",
-      );
+      return EmptyState(icon: Icons.post_add, message: "No pending posts");
     }
 
     return ListView.separated(
@@ -201,17 +224,13 @@ class ModeratorScreen extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: HelperFunctions.getRoleColor(
-                                post.status,
-                              ).withAlpha(20),
+                              color: ColorConstants.errorColor.withAlpha(30),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              post.status.toUpperCase(),
+                              'Pending',
                               style: ThemeConstants.bodySmall.copyWith(
-                                color: HelperFunctions.getRoleColor(
-                                  post.status,
-                                ),
+                                color: ColorConstants.errorColor.withAlpha(30),
                                 fontWeight: FontWeight.w500,
                                 fontSize: 11,
                               ),
@@ -272,10 +291,7 @@ class ModeratorScreen extends StatelessWidget {
 
   Widget _buildCommentsList(BuildContext context, List<dynamic> comments) {
     if (comments.isEmpty) {
-      return _buildEmptyState(
-        icon: Icons.comment,
-        message: "No pending comments",
-      );
+      return EmptyState(icon: Icons.comment, message: "No pending comments");
     }
 
     return ListView.separated(
@@ -328,17 +344,13 @@ class ModeratorScreen extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: HelperFunctions.getRoleColor(
-                                comment.status,
-                              ).withAlpha(20),
+                              color: ColorConstants.errorColor.withAlpha(30),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              comment.status.toUpperCase(),
+                              'Pending',
                               style: ThemeConstants.bodySmall.copyWith(
-                                color: HelperFunctions.getRoleColor(
-                                  comment.status,
-                                ),
+                                color: ColorConstants.errorColor.withAlpha(30),
                                 fontWeight: FontWeight.w500,
                                 fontSize: 11,
                               ),
@@ -398,28 +410,6 @@ class ModeratorScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildEmptyState({required IconData icon, required String message}) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 64,
-            color: ColorConstants.textSecondaryColor.withAlpha(128),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            style: ThemeConstants.bodyMedium.copyWith(
-              color: ColorConstants.textSecondaryColor,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

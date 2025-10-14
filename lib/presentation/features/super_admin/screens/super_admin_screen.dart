@@ -10,7 +10,7 @@ import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_adm
 import '../widgets/post_tab.dart';
 import '../widgets/comment_tab.dart';
 import '../widgets/moderator_tab.dart';
-import '../widgets/admin_tab.dart';
+
 import '../widgets/empty_state.dart';
 
 class SuperAdminScreen extends StatefulWidget {
@@ -33,11 +33,9 @@ class _SuperAdminScreenState extends State<SuperAdminScreen>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SuperAdminBloc(
-        superAdminUseCase: di(),
-        adminUseCase: di(),
-        moderatorUseCase: di(),
-      )..add(FetchAllSuperAdmin()),
+      create: (context) =>
+          SuperAdminBloc(adminUseCase: di(), moderatorUseCase: di())
+            ..add(FetchAllSuperAdmin()),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -66,7 +64,6 @@ class _SuperAdminScreenState extends State<SuperAdminScreen>
               Tab(text: 'Posts'),
               Tab(text: 'Comments'),
               Tab(text: 'Moderators'),
-              Tab(text: 'Admins'),
             ],
           ),
         ),
@@ -91,7 +88,6 @@ class _SuperAdminScreenState extends State<SuperAdminScreen>
                   PostTab(state: state),
                   CommentTab(state: state),
                   ModeratorTab(state: state),
-                  AdminTab(state: state),
                 ],
               );
             }

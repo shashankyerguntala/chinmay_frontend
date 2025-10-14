@@ -11,12 +11,12 @@ class ProfileResponseModel extends ProfileResponseEntity {
   });
 
   factory ProfileResponseModel.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>?;
+    final data = json['data'] as Map<String, dynamic>? ?? {};
 
     final postsByStatusJson =
-        data!['postsByStatus'] as Map<String, dynamic>? ?? {};
+        data['postsByStatus'] as Map<String, dynamic>? ?? {};
 
-    Map<String, List<PostModel>> postsByStatus = {
+    final Map<String, List<PostModel>> postsByStatus = {
       'APPROVED': [],
       'PENDING': [],
       'DENIED': [],
@@ -30,12 +30,14 @@ class ProfileResponseModel extends ProfileResponseEntity {
           .toList();
     }
 
+    final role = data['role'];
+
     return ProfileResponseModel(
       username: data['username']?.toString() ?? '',
       email: data['email']?.toString() ?? '',
       postsByStatus: postsByStatus,
-      roles: data['roles'],
-      hasRequestedModerator: data['moderatorRequest'],
+      roles: role,
+      hasRequestedModerator: data['moderatorRequest'] ?? false,
     );
   }
 }

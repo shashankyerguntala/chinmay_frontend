@@ -2,7 +2,7 @@ class UserEntity {
   final int id;
   final String username;
   final String email;
-  final List<String> role;
+  final String role;
 
   UserEntity({
     required this.id,
@@ -15,13 +15,13 @@ class UserEntity {
     int? id,
     String? username,
     String? email,
-    List<String>? role,
+    String? role,
   }) {
     return UserEntity(
       id: id ?? this.id,
       username: username ?? this.username,
       email: email ?? this.email,
-      role: role ?? List<String>.from(this.role),
+      role: role ?? this.role,
     );
   }
 }

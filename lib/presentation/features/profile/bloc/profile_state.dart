@@ -17,7 +17,7 @@ class ProfileLoaded extends ProfileState {
   final String? msg;
   final String username;
   final String email;
-  final List<String> roles;
+  final String roles;
   final List<PostEntity> approvedPosts;
   final List<PostEntity> pendingPosts;
   final List<PostEntity> declinedPosts;
@@ -40,7 +40,7 @@ extension ProfileLoadedCopy on ProfileLoaded {
     String? msg,
     String? username,
     String? email,
-    List<String>? roles,
+    String? roles,
     List<PostEntity>? approvedPosts,
     List<PostEntity>? pendingPosts,
     List<PostEntity>? declinedPosts,
