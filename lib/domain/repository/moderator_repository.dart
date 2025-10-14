@@ -7,8 +7,8 @@ import 'package:jay_insta_clone/domain/entity/comment_entity.dart';
 abstract class ModeratorRepository {
   Future<Either<Failure, List<PostEntity>>> getPendingPosts();
   Future<Either<Failure, List<CommentEntity>>> getPendingComments();
-  Future<Either<Failure, bool>> approvePost(int postId, int userId);
-  Future<Either<Failure, bool>> rejectPost(int postId, int userId);
-  Future<Either<Failure, bool>> approveComment(int commentId, int userId);
-  Future<Either<Failure, bool>> rejectComment(int commentId, int userId);
+  Future<Either<Failure, String>> approvePost(int postId);
+  Future<Either<Failure, String>> rejectPost(int postId);
+  Future<Either<Failure, String>> approveComment(int commentId);
+  Future<Either<Failure, String>> rejectComment(int commentId);
 }

@@ -79,17 +79,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
     final uid = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.approvePost(event.postId, uid!);
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'approved') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _rejectPost(
@@ -99,17 +92,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
     final uid = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.rejectPost(event.postId, uid!);
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'rejected') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _approveComment(
@@ -119,18 +105,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
     final uid = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.approveComment(event.commentId, uid!);
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'approved') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _rejectComment(
@@ -140,18 +118,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
     final uid = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.rejectComment(event.commentId, uid!);
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'rejected') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _approveModerator(
@@ -164,18 +134,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedRequests = currentState.moderatorRequests
-            .map(
-              (r) =>
-                  r.id == event.requestId ? r.copyWith(status: 'APPROVED') : r,
-            )
-            .toList();
-        emit(currentState.copyWith(moderatorRequests: updatedRequests));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _rejectModerator(
@@ -188,18 +150,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedRequests = currentState.moderatorRequests
-            .map(
-              (r) =>
-                  r.id == event.requestId ? r.copyWith(status: 'REJECTED') : r,
-            )
-            .toList();
-        emit(currentState.copyWith(moderatorRequests: updatedRequests));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _approveAdmin(
@@ -212,17 +166,10 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedAdmins = currentState.adminRequests
-            .map(
-              (a) => a.id == event.adminId ? a.copyWith(status: 'APPROVED') : a,
-            )
-            .toList();
-        emit(currentState.copyWith(adminRequests: updatedAdmins));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 
   Future<void> _rejectAdmin(
@@ -235,16 +182,9 @@ class SuperAdminBloc extends Bloc<SuperAdminEvent, SuperAdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(SuperAdminError(failure.message)), (_) {
-      if (state is SuperAdminLoaded) {
-        final currentState = state as SuperAdminLoaded;
-        final updatedAdmins = currentState.adminRequests
-            .map(
-              (a) => a.id == event.adminId ? a.copyWith(status: 'REJECTED') : a,
-            )
-            .toList();
-        emit(currentState.copyWith(adminRequests: updatedAdmins));
-      }
-    });
+    result.fold(
+      (failure) => emit(SuperAdminError(failure.message)),
+      (_) => add(FetchAllSuperAdmin()),
+    );
   }
 }

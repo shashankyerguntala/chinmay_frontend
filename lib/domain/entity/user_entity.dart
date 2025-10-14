@@ -10,4 +10,18 @@ class UserEntity {
     required this.email,
     required this.role,
   });
+
+  UserEntity copyWith({
+    int? id,
+    String? username,
+    String? email,
+    List<String>? role,
+  }) {
+    return UserEntity(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      role: role ?? List<String>.from(this.role),
+    );
+  }
 }

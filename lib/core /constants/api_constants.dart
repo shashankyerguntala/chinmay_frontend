@@ -17,36 +17,36 @@ class ApiConstants {
   static String userPendingPosts(int id) =>
       '/api/posts/user/$id/status/pending';
   static String userProfile = '/api/users/profile'; //
-  static String becomeModerator = '/api/users/moderator-request';//
+  static String becomeModerator = '/api/users/moderator-request'; //
 
   //! Posts
   static const String createPost = "/api/posts"; //
 
-  static String updatePost(int id) => "/api/posts/$id"; /////////////////
-  static String deletePost(int id) => "/api/posts/$id";
+  static String updatePost(int id) => "/api/posts/$id"; //
+  static String deletePost(int id) => "/api/posts/$id"; //
 
   //! Comments
   static String sendComment(int postId) => "/api/posts/$postId/comment"; //
 
   //! Moderator
   static String getModeratorPendingComments =
-      "/api/moderation/comments/status/pending";
-  static String getModeratorPendingPosts =
-      '/api/moderation/posts/status/pending';
+      "/api/moderator/comments/pending"; //
+  static String getModeratorPendingPosts = '/api/moderator/posts/pending'; //
   static String approvePost(int postId) =>
-      '/api/moderation/posts/$postId'; //////////
-  static String rejectPost(int postId) => '/api/moderation/posts/$postId';
+      '/api/moderator/posts/$postId/approve'; //
+  static String rejectPost(int postId) =>
+      '/api/moderator/posts/$postId/deny'; //
   static String approveComment(int postId) =>
-      '/api/moderation/comments/$postId';
+      '/moderator/comments/$postId/approve';
   static String rejectComment(int postId) =>
-      '/api/moderation/comments/$postId'; ////////////
+      '/moderator/comments/$postId/deny'; //
 
   //! Admin
   static String approveModerator(int reqId) =>
       "/api/moderator-requests/$reqId/review";
   static String rejectModerator(int reqId) =>
       "/api/moderator-requests/$reqId/review";
-  static String getModeratorRequests = "/api/moderator-requests";
+  static String getModeratorRequests = "/api/admin/moderators";//
 
   //! superadmin
 

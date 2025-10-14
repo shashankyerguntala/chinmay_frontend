@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthLocalStorage {////////////////PUT IN LOCAL DATA SOURCE
+class AuthLocalStorage {
   static const tokenKey = "auth_token";
 
   static Future<void> saveUid(int uid) async {

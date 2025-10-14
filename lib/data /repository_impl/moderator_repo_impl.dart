@@ -11,58 +11,54 @@ class ModeratorRepositoryImpl implements ModeratorRepository {
   final ModeratorDataSource dataSource;
 
   ModeratorRepositoryImpl({required this.dataSource});
-
+  //! get comments
   @override
   Future<Either<Failure, List<PostEntity>>> getPendingPosts() async {
     final result = await dataSource.getPendingPosts();
-    return result.fold(
-      (failure) => Left(failure),
-      (posts) => Right(posts.map<PostEntity>((e) => e).toList()),
-    );
+    return result.fold((failure) => Left(failure), (posts) => Right(posts));
   }
 
+  //! get posts
   @override
   Future<Either<Failure, List<CommentEntity>>> getPendingComments() async {
     final result = await dataSource.getPendingComments();
     return result.fold(
       (failure) => Left(failure),
-      (comments) => Right(comments.map<CommentEntity>((e) => e).toList()),
+      (comments) => Right(comments),
     );
   }
-
+//! approve comment 
   @override
-  Future<Either<Failure, bool>> approveComment(
-    int commentId,
-    int userId,
-  ) async {
-    final result = await dataSource.approveComment(commentId, userId);
+  Future<Either<Failure, String>> approveComment(int commentId) async {
+    final result = await dataSource.approveComment(commentId);
     return result.fold(
       (fail) => left(Failure('error while approving comment !')),
       (data) => right(data),
     );
   }
 
+  //!approve post
   @override
-  Future<Either<Failure, bool>> approvePost(int postId, int userId) async {
-    final result = await dataSource.approvePost(postId, userId);
+  Future<Either<Failure, String>> approvePost(int postId) async {
+    final result = await dataSource.approvePost(postId);
     return result.fold(
       (fail) => left(Failure('error while approving post !')),
       (data) => right(data),
     );
   }
-
+//! reject comment
   @override
-  Future<Either<Failure, bool>> rejectComment(int commentId, int userId) async {
-    final result = await dataSource.rejectComment(commentId, userId);
+  Future<Either<Failure, String>> rejectComment(int commentId) async {
+    final result = await dataSource.rejectComment(commentId);
     return result.fold(
       (fail) => left(Failure('error while rejecting comment !')),
       (data) => right(data),
     );
   }
-
+//! reject post 
   @override
-  Future<Either<Failure, bool>> rejectPost(int postId, int userId) async {
-    final result = await dataSource.rejectPost(postId, userId);
+  Future<Either<Failure, String>> rejectPost(int postId) async {
+    final result = await dataSource.rejectPost(postId);
     return result.fold(
       (fail) => left(Failure('error while rejecting post !')),
       (data) => right(data),

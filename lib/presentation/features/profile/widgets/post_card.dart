@@ -43,15 +43,17 @@ class PostCard extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        Text(
-                          post.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: ColorConstants.textPrimaryColor,
+                        Expanded(
+                          child: Text(
+                            post.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: ColorConstants.textPrimaryColor,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                         Spacer(),
                         IconButton(

@@ -22,6 +22,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     FetchUserDetailsEvent event,
     Emitter<ProfileState> emit,
   ) async {
+    emit(ProfileLoading());
+
     final result = await profileUsecase.getUserProfile(event.userId);
 
     result.fold((failure) => emit(ProfileError(failure.message)), (
@@ -32,7 +34,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           approvedPosts: profileResponse.postsByStatus['APPROVED'] ?? [],
           pendingPosts: profileResponse.postsByStatus['PENDING'] ?? [],
           declinedPosts: profileResponse.postsByStatus['DENIED'] ?? [],
-          isModeratorRequest: false,
+          isModeratorRequest: profileResponse.hasRequestedModerator,
           username: profileResponse.username,
           email: profileResponse.email,
           roles: profileResponse.roles.cast<String>(),
@@ -45,7 +47,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     SignOutEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await AuthLocalStorage.clearToken();
+    await Future.delayed(const Duration(seconds: 2));
+
     emit(ProfileSignedOut());
   }
 
@@ -53,20 +57,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     BecomeModeratorEvent event,
     Emitter<ProfileState> emit,
   ) async {
-
     final currentState = state;
     if (currentState is ProfileLoaded) {
       final result = await profileUsecase.sendModeratorRequest();
 
       result.fold((failure) => emit(ProfileError(failure.message)), (_) {
         emit(
-          ProfileLoaded(
-            roles: currentState.roles,
-            username: currentState.username,
-            email: currentState.email,
+          ProfileModeratorSuccess(
             approvedPosts: currentState.approvedPosts,
             pendingPosts: currentState.pendingPosts,
             declinedPosts: currentState.declinedPosts,
+            isModeratorRequest: true,
+            username: currentState.username,
+            email: currentState.email,
+            roles: currentState.roles,
           ),
         );
       });

@@ -27,7 +27,7 @@ class PostUseCase {
     return repository.flagPost(postId, userId);
   }
 
-  Future<Either<Failure, bool>> editPost(
+  Future<Either<Failure, String>> editPost(
     int postId,
     int uid,
     String title,

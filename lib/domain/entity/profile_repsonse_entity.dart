@@ -5,8 +5,10 @@ class ProfileResponseEntity {
   final String email;
   final List<dynamic> roles;
   final Map<String, List<PostModel>> postsByStatus;
+  final bool hasRequestedModerator;
 
   ProfileResponseEntity({
+    required this.hasRequestedModerator,
     required this.roles,
     required this.username,
     required this.email,

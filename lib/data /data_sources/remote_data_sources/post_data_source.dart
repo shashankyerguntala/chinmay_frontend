@@ -10,7 +10,7 @@ class PostDataSource {
   final DioClient dioClient;
 
   PostDataSource(this.dioClient);
-
+//! get all posts 
   Future<Either<Failure, List<PostEntity>>> getAllPosts() async {
     final result = await dioClient.getRequest(ApiConstants.getAllPosts);
 
@@ -62,6 +62,7 @@ class PostDataSource {
     });
   }
 
+  //! get user posts
   Future<Either<Failure, List<PostModel>>> getUserPosts(String userId) async {
     final response = await dioClient.getRequest(ApiConstants.userPosts(userId));
     return response.fold((left) => Left(left), (data) {
@@ -69,7 +70,7 @@ class PostDataSource {
       return Right(posts);
     });
   }
-
+//! flag post
   Future<Either<Failure, bool>> flagPost(int postId, int userId) async {
     final response = await dioClient.putRequest(
       ApiConstants.flagPost(postId),
@@ -79,23 +80,31 @@ class PostDataSource {
     return response.fold((failure) => Left(failure), (_) => const Right(true));
   }
 
-  Future<Either<Failure, bool>> editPost(
+  //! edit post
+  Future<Either<Failure, String>> editPost(
     int postId,
-    int uid,
+
     String title,
     String content,
   ) async {
     final response = await dioClient.putRequest(
       ApiConstants.updatePost(postId),
-      data: {"userId": uid, "title": title, "content": content},
+      data: {"title": title, "content": content},
     );
-    return response.fold((failure) => Left(failure), (data) => Right(true));
+    return response.fold(
+      (failure) => Left(failure),
+      (data) => Right(data['message']),
+    );
   }
 
+  //! delete post
   Future<Either<Failure, String>> deletePost(int postId) async {
     final response = await dioClient.deleteRequest(
       ApiConstants.deletePost(postId),
     );
-    return response.fold((failure) => Left(failure), (data) => Right(data));
+    return response.fold((failure) => Left(failure), (data) {
+      final message = data['message'];
+      return Right(message);
+    });
   }
 }

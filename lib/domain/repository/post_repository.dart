@@ -12,7 +12,7 @@ abstract class PostRepository {
 
   Future<Either<Failure, bool>> flagPost(int postId, int userId);
 
-  Future<Either<Failure, bool>> editPost(
+  Future<Either<Failure, String>> editPost(
     int postId,
     int uid,
     String title,

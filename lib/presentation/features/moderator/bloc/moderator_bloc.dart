@@ -36,17 +36,10 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
   ) async {
     final userId = await AuthLocalStorage.getUid();
     final result = await useCase.approvePost(event.postId, userId!);
-    result.fold((failure) => emit(ModeratorError(failure.message)), (_) {
-      if (state is ModeratorLoaded) {
-        final currentState = state as ModeratorLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'approved') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(ModeratorError(failure.message)),
+      (_) => add(FetchAll()),
+    );
   }
 
   Future<void> _rejectPost(
@@ -55,17 +48,10 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
   ) async {
     final userId = await AuthLocalStorage.getUid();
     final result = await useCase.rejectPost(event.postId, userId!);
-    result.fold((failure) => emit(ModeratorError(failure.message)), (_) {
-      if (state is ModeratorLoaded) {
-        final currentState = state as ModeratorLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'rejected') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(ModeratorError(failure.message)),
+      (_) => add(FetchAll()),
+    );
   }
 
   Future<void> _approveComment(
@@ -74,18 +60,10 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
   ) async {
     final userId = await AuthLocalStorage.getUid();
     final result = await useCase.approveComment(event.commentId, userId!);
-    result.fold((failure) => emit(ModeratorError(failure.message)), (_) {
-      if (state is ModeratorLoaded) {
-        final currentState = state as ModeratorLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'approved') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(ModeratorError(failure.message)),
+      (_) => add(FetchAll()),
+    );
   }
 
   Future<void> _rejectComment(
@@ -94,17 +72,9 @@ class ModeratorBloc extends Bloc<ModeratorEvent, ModeratorState> {
   ) async {
     final userId = await AuthLocalStorage.getUid();
     final result = await useCase.rejectComment(event.commentId, userId!);
-    result.fold((failure) => emit(ModeratorError(failure.message)), (_) {
-      if (state is ModeratorLoaded) {
-        final currentState = state as ModeratorLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'rejected') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(ModeratorError(failure.message)),
+      (_) => add(FetchAll()),
+    );
   }
 }

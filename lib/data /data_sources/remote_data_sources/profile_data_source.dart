@@ -11,7 +11,10 @@ class ProfileDataSource {
   ProfileDataSource({required this.dioClient});
 
   Future<Either<Failure, String>> sendModeratorRequest() async {
-    final response = await dioClient.postRequest(ApiConstants.becomeModerator);
+    final response = await dioClient.postRequest(
+      ApiConstants.becomeModerator,
+      data: {"reason": "i want to become one "},
+    );
 
     return response.fold((fail) => Left(Failure('Request already exists!')), (
       data,

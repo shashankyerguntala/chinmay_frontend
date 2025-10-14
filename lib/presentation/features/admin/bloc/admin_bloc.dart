@@ -58,17 +58,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     final userId = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.approvePost(event.postId, userId!);
 
-    result.fold((failure) => emit(AdminError(failure.message)), (_) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'approved') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 
   Future<void> _rejectPost(
@@ -78,17 +71,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     final userId = await AuthLocalStorage.getUid();
     final result = await moderatorUseCase.rejectPost(event.postId, userId!);
 
-    result.fold((failure) => emit(AdminError(failure.message)), (_) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedPosts = currentState.posts
-            .map(
-              (p) => p.id == event.postId ? p.copyWith(postStatus: 'rejected') : p,
-            )
-            .toList();
-        emit(currentState.copyWith(posts: updatedPosts));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 
   Future<void> _approveComment(
@@ -101,18 +87,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       userId!,
     );
 
-    result.fold((failure) => emit(AdminError(failure.message)), (_) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'approved') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 
   Future<void> _rejectComment(
@@ -125,18 +103,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       userId!,
     );
 
-    result.fold((failure) => emit(AdminError(failure.message)), (_) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedComments = currentState.comments
-            .map(
-              (c) =>
-                  c.id == event.commentId ? c.copyWith(commentStatus: 'rejected') : c,
-            )
-            .toList();
-        emit(currentState.copyWith(comments: updatedComments));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 
   Future<void> _approveModerator(
@@ -149,18 +119,10 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(AdminError(failure.message)), (_) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedRequests = currentState.moderatorRequests
-            .map(
-              (r) =>
-                  r.id == event.requestId ? r.copyWith(status: 'APPROVED') : r,
-            )
-            .toList();
-        emit(currentState.copyWith(moderatorRequests: updatedRequests));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 
   Future<void> _rejectModerator(
@@ -173,17 +135,9 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       uid!,
     );
 
-    result.fold((failure) => emit(AdminError(failure.message)), (data) {
-      if (state is AdminLoaded) {
-        final currentState = state as AdminLoaded;
-        final updatedRequests = currentState.moderatorRequests
-            .map(
-              (r) =>
-                  r.id == event.requestId ? r.copyWith(status: 'REJECTED') : r,
-            )
-            .toList();
-        emit(currentState.copyWith(moderatorRequests: updatedRequests));
-      }
-    });
+    result.fold(
+      (failure) => emit(AdminError(failure.message)),
+      (_) => add(FetchAllAdmin()),
+    );
   }
 }

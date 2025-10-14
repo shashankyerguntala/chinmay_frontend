@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Signed Out Successful')),
             );
-            AuthLocalStorage.clearToken();
+
             context.go('/signin');
           } else if (state is ProfileModeratorSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -89,15 +89,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (state is ProfileLoaded ||
                   state is ProfileModeratorSuccess) {
                 final loadedState = state as ProfileLoaded;
-
-                final isModerator = loadedState.isModeratorRequest;
-
                 return DefaultTabController(
                   length: 3,
                   child: Column(
                     children: [
                       ProfileHeader(
-                        hasRequestedModerator: isModerator,
+                        //Todo Ithe bgh roles switching sathi
+                        hasRequestedModerator: state.isModeratorRequest,
                         onModeratorRequest: () {
                           if (state.roles.last == "AUTHOR") {
                             context.read<ProfileBloc>().add(

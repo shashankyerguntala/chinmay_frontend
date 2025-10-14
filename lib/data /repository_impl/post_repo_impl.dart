@@ -9,7 +9,7 @@ class PostRepositoryImpl implements PostRepository {
   final PostDataSource dataSource;
 
   PostRepositoryImpl(this.dataSource);
-
+  //! get all
   @override
   Future<Either<Failure, List<PostEntity>>> getAllPosts() async {
     final result = await dataSource.getAllPosts();
@@ -24,6 +24,7 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  //! create
   @override
   Future<Either<Failure, String>> createPost(
     String title,
@@ -33,6 +34,7 @@ class PostRepositoryImpl implements PostRepository {
     return result.fold((failure) => Left(failure), (msg) => Right(msg));
   }
 
+  //! get user posts
   @override
   Future<Either<Failure, List<PostEntity>>> getUserPosts(String userId) async {
     final result = await dataSource.getUserPosts(userId);
@@ -51,17 +53,19 @@ class PostRepositoryImpl implements PostRepository {
     );
   }
 
+  //! edit
   @override
-  Future<Either<Failure, bool>> editPost(
+  Future<Either<Failure, String>> editPost(
     int postId,
     int uid,
     String title,
     String content,
   ) async {
-    final result = await dataSource.editPost(postId, uid, title, content);
+    final result = await dataSource.editPost(postId, title, content);
     return result.fold((failure) => Left(failure), (data) => Right(data));
   }
 
+  //!delete
   @override
   Future<Either<Failure, bool>> deletePost(int postId) async {
     final result = await dataSource.deletePost(postId);

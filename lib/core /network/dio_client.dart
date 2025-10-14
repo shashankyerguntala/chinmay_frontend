@@ -20,7 +20,7 @@ class DioClient {
       ) {
     dio.interceptors.add(AppInterceptor());
   }
-
+//! use reponse parser 
   Future<Either<Failure, dynamic>> getRequest(
     String endpoint, {
     Map<String, dynamic>? query,

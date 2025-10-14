@@ -13,26 +13,29 @@ class ModeratorUseCase {
     return repository.getPendingPosts();
   }
 
-  Future<Either<Failure, bool>> approvePost(int postId, int userId) async {
-    return repository.approvePost(postId, userId);
+  Future<Either<Failure, String>> approvePost(int postId, int userId) async {
+    return repository.approvePost(postId);
   }
 
-  Future<Either<Failure, bool>> rejectPost(int postId, int userId) async {
-    return repository.rejectPost(postId, userId);
+  Future<Either<Failure, String>> rejectPost(int postId, int userId) async {
+    return repository.rejectPost(postId);
   }
 
   Future<Either<Failure, List<CommentEntity>>> getPendingComments() async {
     return repository.getPendingComments();
   }
 
-  Future<Either<Failure, bool>> approveComment(
+  Future<Either<Failure, String>> approveComment(
     int commentId,
     int userId,
   ) async {
-    return repository.approveComment(commentId, userId);
+    return repository.approveComment(commentId);
   }
 
-  Future<Either<Failure, bool>> rejectComment(int commentId, int userId) async {
-    return repository.rejectComment(commentId, userId);
+  Future<Either<Failure, String>> rejectComment(
+    int commentId,
+    int userId,
+  ) async {
+    return repository.rejectComment(commentId);
   }
 }

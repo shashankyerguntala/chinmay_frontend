@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:jay_insta_clone/core%20/network/failure.dart';
 import 'package:jay_insta_clone/data%20/models/moderator_request_model.dart';
+import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 import 'package:jay_insta_clone/domain/repository/super_admin_repository.dart';
 
 class SuperAdminUsecase {
@@ -8,7 +9,7 @@ class SuperAdminUsecase {
 
   SuperAdminUsecase({required this.repository});
 
-  Future<Either<Failure, List<ModeratorRequestModel>>> getAdminRequests() {
+  Future<Either<Failure, List<UserEntity>>> getAdminRequests() {
     return repository.getAdminRequests();
   }
 
