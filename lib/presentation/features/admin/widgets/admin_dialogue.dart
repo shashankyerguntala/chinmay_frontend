@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ConfirmationDialog {
   static Future<bool?> show(
@@ -18,7 +19,7 @@ class ConfirmationDialog {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => context.pop(),
             style: ElevatedButton.styleFrom(
               backgroundColor: action == 'Approve' ? Colors.green : Colors.red,
               foregroundColor: Colors.white,

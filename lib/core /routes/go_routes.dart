@@ -3,6 +3,7 @@ import 'package:jay_insta_clone/core%20/constants/string_constants.dart';
 
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 import 'package:jay_insta_clone/domain/entity/user_entity.dart';
+import 'package:jay_insta_clone/presentation/features/add_admin.dart/screen/add_admin_screen.dart';
 import 'package:jay_insta_clone/presentation/features/admin/screens/admin_screen.dart';
 
 import 'package:jay_insta_clone/presentation/features/authentication/sign_in/screens/sign_in_screen.dart';
@@ -75,6 +76,10 @@ class AppRoutes {
       GoRoute(
         path: StringConstants.superAdmin,
         builder: (context, _) => const SuperAdminScreen(),
+      ),
+      GoRoute(
+        path: StringConstants.addAdmin,
+        builder: (context, _) => const AddAdminScreen(),
       ),
     ],
   );

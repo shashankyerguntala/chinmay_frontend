@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
-import 'package:jay_insta_clone/core%20/constants/theme_constants.dart';
-import 'package:jay_insta_clone/core%20/helper_functions.dart';
 
 import 'package:jay_insta_clone/presentation/features/moderator/bloc/moderator_bloc.dart';
 import 'package:jay_insta_clone/presentation/features/moderator/bloc/moderator_event.dart';
+import 'package:jay_insta_clone/presentation/features/moderator/widgets/comment_info.dart';
+import 'package:jay_insta_clone/presentation/features/moderator/widgets/icon_box.dart';
 
 class CommentCard extends StatelessWidget {
   final dynamic comment;
@@ -24,57 +24,20 @@ class CommentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                _iconBox(Icons.chat_bubble_outline, context),
+                IconBox(icon: Icons.chat_bubble_outline),
                 const SizedBox(width: 12),
-                Expanded(child: _commentInfo(context)),
+                Expanded(child: CommentInfo(comment: comment)),
               ],
             ),
             const SizedBox(height: 12),
-            _actionButtons(context),
+            actionButtons(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _iconBox(IconData icon, BuildContext context) => Container(
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: ColorConstants.primaryColor.withAlpha(20),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Icon(icon, size: 20, color: ColorConstants.primaryColor),
-  );
-
-  Widget _commentInfo(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        comment.content,
-        style: ThemeConstants.bodyMedium,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-      ),
-      const SizedBox(height: 8),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: HelperFunctions.getRoleColor(comment.status).withAlpha(20),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          comment.status.toUpperCase(),
-          style: ThemeConstants.bodySmall.copyWith(
-            color: ColorConstants.errorColor,
-            fontWeight: FontWeight.w500,
-            fontSize: 11,
-          ),
-        ),
-      ),
-    ],
-  );
-
-  Widget _actionButtons(BuildContext context) => Row(
+  Widget actionButtons(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
       TextButton.icon(

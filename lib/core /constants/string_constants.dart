@@ -5,7 +5,8 @@ class StringConstants {
   static const String alreadyUser = 'Already a User?';
   static const String notUser = 'Not a user?';
   static const String welcomeBack = 'Welcome Back ! Sign In into your account';
-  static String welcomeUser(String username) => "Welcome back $username";///////////////
+  static String welcomeUser(String username) =>
+      "Welcome back $username"; ///////////////
   static const String signUpTitle = 'Sign Up';
   static const String signInTitle = 'Sign In';
   static const String usernameLabel = 'Username';
@@ -40,6 +41,7 @@ class StringConstants {
   static const String admin = '/admin';
   static const String moderator = '/moderator';
   static const String superAdmin = '/superadmin';
+  static const String addAdmin = '/addadmin';
 
   //! home screen constants
   static const String noPostsAvailable = "No posts available";

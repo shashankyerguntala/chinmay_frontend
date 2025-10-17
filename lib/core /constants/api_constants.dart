@@ -42,11 +42,13 @@ class ApiConstants {
       '/moderator/comments/$postId/deny'; //
 
   //! Admin
+
+  static String addadmin = "/api/admin/users"; //
   static String approveModerator(int reqId) =>
-      "/api/moderator-requests/$reqId/review";
+      "/api/admin/moderator-requests/$reqId/approve"; //
   static String rejectModerator(int reqId) =>
-      "/api/moderator-requests/$reqId/review";
-  static String getModeratorRequests = "/api/admin/moderators";//
+      "/api/moderator-requests/$reqId/review"; //
+  static String getModeratorRequests = "/api/admin/moderator-requests"; //
 
   //! superadmin
 

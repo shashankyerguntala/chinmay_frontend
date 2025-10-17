@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:jay_insta_clone/core%20/network/failure.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
+import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 import 'package:jay_insta_clone/domain/repository/admin_repository.dart';
 
 class AdminUseCase {
@@ -8,7 +8,7 @@ class AdminUseCase {
 
   AdminUseCase({required this.repository});
 
-  Future<Either<Failure, List<UserEntity>>> getModeratorRequests() {
+  Future<Either<Failure, List<ModeratorRequestEntity>>> getModeratorRequests() {
     return repository.getModeratorRequests();
   }
 
@@ -24,5 +24,13 @@ class AdminUseCase {
     int adminId,
   ) {
     return repository.rejectModeratorRequest(requestId, adminId);
+  }
+
+  Future<Either<Failure, String>> addAdmin({
+    required String name,
+    required String email,
+    required String password,
+  }) {
+    return repository.addAdmin(name: name, email: email, password: password);
   }
 }

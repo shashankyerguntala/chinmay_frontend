@@ -97,6 +97,7 @@ class ModeratorDataSource {
   Future<Either<Failure, String>> rejectPost(int postId) async {
     final response = await dioClient.postRequest(
       ApiConstants.rejectPost(postId),
+      data: {"reason": ""},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -118,7 +119,7 @@ class ModeratorDataSource {
   Future<Either<Failure, String>> approveComment(int commentId) async {
     final response = await dioClient.postRequest(
       ApiConstants.approveComment(commentId),
-      data: {"reason": "Comment is appropriate"},
+      data: {"reason": ""},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -139,7 +140,7 @@ class ModeratorDataSource {
   Future<Either<Failure, String>> rejectComment(int commentId) async {
     final response = await dioClient.postRequest(
       ApiConstants.rejectComment(commentId),
-      data: {"reason": "Comment is appropriate"},
+      data: {"reason": ""},
     );
 
     return response.fold((failure) => Left(failure), (data) {

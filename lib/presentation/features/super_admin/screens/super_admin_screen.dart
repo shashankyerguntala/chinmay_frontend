@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
+import 'package:jay_insta_clone/core%20/constants/string_constants.dart';
 import 'package:jay_insta_clone/core%20/constants/theme_constants.dart';
 import 'package:jay_insta_clone/core%20/di/di.dart';
 
@@ -10,7 +12,6 @@ import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_adm
 import '../widgets/post_tab.dart';
 import '../widgets/comment_tab.dart';
 import '../widgets/moderator_tab.dart';
-
 import '../widgets/empty_state.dart';
 
 class SuperAdminScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SuperAdminScreenState extends State<SuperAdminScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -96,6 +97,11 @@ class _SuperAdminScreenState extends State<SuperAdminScreen>
               message: 'No data available',
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: ColorConstants.primaryColor,
+          onPressed: () => context.go(StringConstants.addAdmin),
+          child: Icon(Icons.add, color: ColorConstants.backgroundColor),
         ),
       ),
     );

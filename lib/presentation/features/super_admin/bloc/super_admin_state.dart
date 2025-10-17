@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 import 'package:jay_insta_clone/domain/entity/comment_entity.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 
 abstract class SuperAdminState extends Equatable {
   const SuperAdminState();
@@ -23,7 +23,7 @@ class SuperAdminError extends SuperAdminState {
 class SuperAdminLoaded extends SuperAdminState {
   final List<PostEntity> posts;
   final List<CommentEntity> comments;
-  final List<UserEntity> moderatorRequests;
+  final List<ModeratorRequestEntity> moderatorRequests;
 
   const SuperAdminLoaded({
     this.posts = const [],
@@ -34,7 +34,7 @@ class SuperAdminLoaded extends SuperAdminState {
   SuperAdminLoaded copyWith({
     List<PostEntity>? posts,
     List<CommentEntity>? comments,
-    List<UserEntity>? moderatorRequests,
+    List<ModeratorRequestEntity>? moderatorRequests,
   }) {
     return SuperAdminLoaded(
       posts: posts ?? this.posts,

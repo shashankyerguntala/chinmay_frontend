@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:jay_insta_clone/core%20/network/failure.dart';
 
 import 'package:jay_insta_clone/data%20/data_sources/remote_data_sources/admin_data_source.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
+import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 
 import 'package:jay_insta_clone/domain/repository/admin_repository.dart';
 
@@ -12,7 +12,7 @@ class AdminRepositoryImpl implements AdminRepository {
   AdminRepositoryImpl({required this.dataSource});
 
   @override
-  Future<Either<Failure, List<UserEntity>>> getModeratorRequests() async {
+  Future<Either<Failure, List<ModeratorRequestEntity>>> getModeratorRequests() async {
     final result = await dataSource.getModeratorRequests();
     return result.fold(
       (failure) => Left(failure),
@@ -35,6 +35,19 @@ class AdminRepositoryImpl implements AdminRepository {
     int adminId,
   ) async {
     final result = await dataSource.rejectModeratorRequest(requestId, adminId);
+    return result.fold((failure) => Left(failure), (success) => Right(success));
+  }
+  @override
+  Future<Either<Failure, String>> addAdmin({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    final result = await dataSource.addAdmin(
+      name: name,
+      email: email,
+      password: password,
+    );
     return result.fold((failure) => Left(failure), (success) => Right(success));
   }
 }

@@ -3,53 +3,55 @@ import 'package:jay_insta_clone/core%20/constants/api_constants.dart';
 import 'package:jay_insta_clone/core%20/network/dio_client.dart';
 import 'package:jay_insta_clone/core%20/network/failure.dart';
 import 'package:jay_insta_clone/data%20/models/api_response_model.dart';
+import 'package:jay_insta_clone/data%20/models/moderator_request_model.dart';
 
-import 'package:jay_insta_clone/data%20/models/user_model.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
+import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 
 class AdminDataSource {
   final DioClient dioClient;
 
   AdminDataSource({required this.dioClient});
 
-  //! get moderator requests
-  Future<Either<Failure, List<UserEntity>>> getModeratorRequests() async {
+  Future<Either<Failure, List<ModeratorRequestEntity>>>
+  getModeratorRequests() async {
     final response = await dioClient.getRequest(
       ApiConstants.getModeratorRequests,
     );
-    //Todo here we can get the error ! !
+
     return response.fold((failure) => Left(failure), (data) {
       try {
-        final apiResponse = ApiResponseModel<List<UserModel>>.fromJson(
-          data,
-          (jsonList) => (jsonList as List<dynamic>)
-              .map((e) => UserModel.fromJson(e as Map<String, dynamic>))
-              .toList()
-              .cast<UserModel>(),
-        );
+        final apiResponse =
+            ApiResponseModel<List<ModeratorRequestModel>>.fromJson(data, (
+              jsonList,
+            ) {
+              return (jsonList as List<dynamic>).map((e) {
+                return ModeratorRequestModel.fromJson(
+                  e as Map<String, dynamic>,
+                );
+              }).toList();
+            });
 
         if (apiResponse.success && apiResponse.data != null) {
-          final user = apiResponse.data!
-              .map((userModel) => userModel as UserEntity)
+          final List<ModeratorRequestEntity> requests = apiResponse.data!
+              .map((e) => e as ModeratorRequestEntity)
               .toList();
-          return Right(user);
+
+          return Right(requests);
         } else {
           return Left(Failure(apiResponse.message));
         }
       } catch (e) {
-        return Left(Failure("Failed to parse posts: $e"));
+        return Left(Failure("Failed to parse moderator requests: $e"));
       }
     });
   }
 
-  //!approve moderator
   Future<Either<Failure, String>> approveModeratorRequest(
     int requestId,
     int adminId,
   ) async {
-    final response = await dioClient.putRequest(
+    final response = await dioClient.postRequest(
       ApiConstants.approveModerator(requestId),
-      data: {"reason": "User meets moderator criteria"},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -67,14 +69,12 @@ class AdminDataSource {
     });
   }
 
-  //! reject moderator
   Future<Either<Failure, String>> rejectModeratorRequest(
     int requestId,
     int adminId,
   ) async {
-    final response = await dioClient.putRequest(
+    final response = await dioClient.postRequest(
       ApiConstants.rejectModerator(requestId),
-      data: {"reason": "User meets moderator criteria"},
     );
 
     return response.fold((failure) => Left(failure), (data) {
@@ -90,5 +90,34 @@ class AdminDataSource {
 
       return Right(apiResponse.message);
     });
+  }
+
+  Future<Either<Failure, String>> addAdmin({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await dioClient.postRequest(
+        ApiConstants.addadmin,
+        data: {"username": name, "email": email, "password": password},
+      );
+
+      return response.fold((failure) => Left(failure), (data) {
+        final apiResponse = ApiResponseModel<String>.fromJson(
+          data,
+          (json) => json?.toString() ?? '',
+        );
+
+        if (!apiResponse.success) {
+          final errorMessage = apiResponse.error ?? apiResponse.message;
+          return Left(Failure(errorMessage));
+        }
+
+        return Right(apiResponse.message);
+      });
+    } catch (e) {
+      return Left(Failure("Failed to add admin: $e"));
+    }
   }
 }

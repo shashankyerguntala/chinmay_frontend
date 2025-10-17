@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:jay_insta_clone/domain/entity/moderator_request_entity.dart';
 import 'package:jay_insta_clone/domain/entity/post_entity.dart';
 import 'package:jay_insta_clone/domain/entity/comment_entity.dart';
-import 'package:jay_insta_clone/domain/entity/user_entity.dart';
 
 abstract class AdminState extends Equatable {
   const AdminState();
@@ -23,7 +23,7 @@ class AdminError extends AdminState {
 class AdminLoaded extends AdminState {
   final List<PostEntity> posts;
   final List<CommentEntity> comments;
-  final List<UserEntity> moderatorRequests;
+  final List<ModeratorRequestEntity> moderatorRequests;
 
   const AdminLoaded({
     this.posts = const [],
@@ -34,7 +34,7 @@ class AdminLoaded extends AdminState {
   AdminLoaded copyWith({
     List<PostEntity>? posts,
     List<CommentEntity>? comments,
-    List<UserEntity>? moderatorRequests,
+    List<ModeratorRequestEntity>? moderatorRequests,
   }) {
     return AdminLoaded(
       posts: posts ?? this.posts,

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:jay_insta_clone/core%20/constants/color_constants.dart';
+
 import 'package:jay_insta_clone/core%20/constants/theme_constants.dart';
 import 'package:jay_insta_clone/core%20/di/di.dart';
-import 'package:jay_insta_clone/data%20/data_sources/local_data_sources/auth_local_storage.dart';
-import 'package:jay_insta_clone/presentation/features/admin/widgets/moderator_request_tab.dart';
 
-import '../bloc/admin_bloc.dart';
-import '../bloc/admin_event.dart';
-import '../bloc/admin_state.dart';
-import '../widgets/posts_tab.dart';
-import '../widgets/comments_tab.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_admin_bloc.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_admin_event.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/bloc/super_admin_state.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/widgets/comment_tab.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/widgets/empty_state.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/widgets/moderator_tab.dart';
+import 'package:jay_insta_clone/presentation/features/super_admin/widgets/post_tab.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -31,95 +32,73 @@ class _AdminScreenState extends State<AdminScreen>
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          AdminBloc(adminUseCase: di(), moderatorUseCase: di())
-            ..add(FetchAllAdmin()),
+          SuperAdminBloc(adminUseCase: di(), moderatorUseCase: di())
+            ..add(FetchAllSuperAdmin()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Admin Dashboard', style: ThemeConstants.headingMedium),
           centerTitle: true,
           elevation: 0,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                AuthLocalStorage.clearToken();
-                context.go('/signin');
-              },
-              child: const Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Icon(Icons.exit_to_app),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.admin_panel_settings,
+                color: ColorConstants.primaryColor,
+                size: 24,
               ),
+              const SizedBox(width: 8),
+              Text('Admin', style: ThemeConstants.headingMedium),
+            ],
+          ),
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: Colors.white,
+            unselectedLabelColor: ColorConstants.textSecondaryColor,
+            indicator: BoxDecoration(
+              color: ColorConstants.primaryColor,
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(56),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: ColorConstants.primaryColor.withAlpha(15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: ColorConstants.textSecondaryColor,
-                  indicator: BoxDecoration(
-                    color: ColorConstants.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  tabs: const [
-                    Tab(text: 'Posts'),
-                    Tab(text: 'Comments'),
-                    Tab(text: 'Moderators'),
-                  ],
-                ),
-              ),
-            ),
+            tabs: const [
+              Tab(text: 'Posts'),
+              Tab(text: 'Comments'),
+              Tab(text: 'Moderators'),
+            ],
           ),
         ),
-        body: BlocConsumer<AdminBloc, AdminState>(
+        body: BlocConsumer<SuperAdminBloc, SuperAdminState>(
           listener: (context, state) {
-            if (state is AdminError) {
+            if (state is SuperAdminError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
                   backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
                 ),
               );
             }
           },
           builder: (context, state) {
-            if (state is AdminLoading) {
+            if (state is SuperAdminLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is AdminLoaded) {
+            } else if (state is SuperAdminLoaded) {
               return TabBarView(
                 controller: _tabController,
                 children: [
-                  PostsTab(posts: state.posts),
-                  CommentsTab(comments: state.comments),
-                  ModeratorRequestTab(
-                    moderatorRequests: state.moderatorRequests,
-                  ),
+                  PostTab(state: state),
+                  CommentTab(state: state),
+                  ModeratorTab(state: state),
                 ],
               );
             }
-            return const Center(child: Text('No data available'));
+            return const EmptyState(
+              icon: Icons.inbox,
+              message: 'No data available',
+            );
           },
         ),
       ),
     );
   }
-
 }
